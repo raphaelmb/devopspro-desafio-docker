@@ -84,10 +84,51 @@ Repositório da aplicação .NET: https://github.com/raphaelmb/conversao-peso
 
 # QUESTÃO 4
 
+Foi adicionado um arquivo docker-compose.yaml ao projeto para subir a aplicação e banco de dados com um único comando:
 
+```
+version: "3.8"
 
+networks:
+  rotten-potatoes:
+    driver: bridge
 
+volumes:
+  mongo_rotten_potatoes_volume:
 
+services:
+  app:
+    build: .
+    ports:
+      - 5000:5000
+    depends_on:
+      - db
+    networks:
+      - rotten-potatoes
+    environment:
+      MONGODB_DB: admin
+      MONGODB_HOST: db
+      MONGODB_PORT: 27017
+      MONGODB_USERNAME: mongouser
+      MONGODB_PASSWORD: mongopwd
+
+  db:
+    image: mongo:5.0.5
+    restart: always
+    networks:
+      - rotten-potatoes
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongouser
+      MONGO_INITDB_ROOT_PASSWORD: mongopwd
+    volumes:
+      - mongo_rotten_potatoes_volume:/data/db
+```
+
+Segue o link para o repositório: https://github.com/raphaelmb/rotten-potatoes
+
+# QUESTÃO 5
 
 
 
