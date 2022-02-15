@@ -130,5 +130,53 @@ Segue o link para o repositório: https://github.com/raphaelmb/rotten-potatoes
 
 # QUESTÃO 5
 
+A partir deste docker-compose, roda-se um container Wordpress e contaienr do banco de dados MySQL.
+
+```
+version: '3.8'
+
+volumes:
+  wordpress_vol:
+  db_vol:
+
+networks:
+  wordpress_network:
+    driver: bridge
+
+services:
+  app:
+    container_name: wordpress
+    image: wordpress:5.9.0-apache
+    restart: always
+    ports:
+      - 8080:80
+    networks:
+      - wordpress_network
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wpuser
+      WORDPRESS_DB_PASSWORD: wppass
+      WORDPRESS_DB_NAME: wpdb
+    volumes:
+      - wordpress_vol:/var/www/html
+    depends_on:
+      - db
+
+  db:
+    container_name: mysql-wordpress
+    image: mysql:5.7
+    restart: always
+    networks:
+      - wordpress_network
+    environment:
+      MYSQL_DATABASE: wpdb
+      MYSQL_USER: wpuser
+      MYSQL_PASSWORD: wppass
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+      - db_vol:/var/lib/mysql
+```
+
+# QUESTÃO 6
 
 
