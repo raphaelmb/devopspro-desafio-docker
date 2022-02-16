@@ -179,4 +179,85 @@ services:
 
 # QUESTÃO 6
 
+```
+version: "3.8"
+
+volumes:
+  postgres-review_vol:
+  mongo-movie_vol:
+
+networks:
+  rotten_potatoes_network_movie:
+    driver: bridge
+  rotten_potatoes_network_review:
+    driver: bridge
+
+services:
+  rotten-potatoes-app:
+    container_name: rotten-potatoes-app
+    image: raphaelmb/rotten-potatoes-app:v1
+    ports:
+      - 5000:5000
+    networks:
+      - rotten_potatoes_network_movie
+      - rotten_potatoes_network_review
+    depends_on:
+      - movie-ms
+      - review-ms
+    environment:
+      MOVIE_SERVICE_URI: http://movie-ms:8181
+      REVIEW_SERVICE_URI: http://review-ms:80
+
+  review-ms:
+    container_name: review-ms
+    image: raphaelmb/review-ms:v1
+    ports:
+      - 8080:80
+    networks:
+      - rotten_potatoes_network_review
+    depends_on:
+      - postgres-review
+    environment:
+      ConnectionStrings__MyConnection: Host=postgres-review;Database=review;Username=pguser;Password=Pg@123;
+
+  postgres-review:
+    container_name: postgres-review
+    image: postgres:14-alpine3.15
+    ports:
+      - 5432:5432
+    networks:
+      - rotten_potatoes_network_review
+    volumes:
+      - postgres-review_vol:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: pguser
+      POSTGRES_PASSWORD: Pg@123
+      POSTGRES_DB: review
+
+  movie-ms:
+    container_name: movie-ms
+    image: raphaelmb/movie-ms:v1
+    ports:
+      - 8181:8181
+    networks:
+      - rotten_potatoes_network_movie
+    depends_on:
+      - mongo-movie
+    environment:
+      MONGODB_URI: mongodb://mongouser:mongopwd@mongo-movie:27017/admin
+
+  mongo-movie:
+    container_name: mongo-movie
+    image: mongo:5.0.5
+    ports:
+      - 27017:27017
+    networks:
+      - rotten_potatoes_network_movie
+    volumes:
+      - mongo-movie_vol:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongouser
+      MONGO_INITDB_ROOT_PASSWORD: mongopwd
+```
+
 
