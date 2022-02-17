@@ -135,7 +135,7 @@ services:
       - mongo_rotten_potatoes_volume:/data/db
 ```
 
-[Link para o repositório](https://github.com/raphaelmb/rotten-potatoes)
+[Link do repositório](https://github.com/raphaelmb/rotten-potatoes)
 
 # QUESTÃO 5
 
