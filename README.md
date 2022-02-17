@@ -1,3 +1,3 @@
-# kubedev-desafio-docker
+# Desafio Docker - KubeDev
 
-WIP
+No arquivo resposta_desafio.md estão as respostas ao desafio Docker do curso [KubeDev](https://kubedev.io/).
